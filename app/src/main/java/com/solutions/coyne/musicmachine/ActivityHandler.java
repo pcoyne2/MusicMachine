@@ -10,46 +10,45 @@ import android.os.RemoteException;
  */
 
 public class ActivityHandler extends Handler {
+    private MainActivityJava mMainActivity;
 
-    private MainActivityJava mainActivityJava;
-
-    public ActivityHandler(MainActivityJava mainActivityJava){
-        this.mainActivityJava = mainActivityJava;
+    public ActivityHandler(MainActivityJava mainActivity) {
+        mMainActivity = mainActivity;
     }
 
     @Override
     public void handleMessage(Message msg) {
-        if (msg.arg1 ==0){
-            //Music not playing
-            if(msg.arg2 ==1){
-                mainActivityJava.changePlayButtonText("Play");
-            }else {
-                //Play the music
-                Message messenge = Message.obtain();
-                messenge.arg1 = 0;
+        if (msg.arg1 == 0) {
+            // Music is NOT playing
+            if (msg.arg2 == 1) {
+                mMainActivity.changePlayButtonText("Play");
+            } else {
+                // Play the music
+                Message message = Message.obtain();
+                message.arg1 = 0;
                 try {
-                    msg.replyTo.send(messenge);
+                    msg.replyTo.send(message);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
-                // change play button to say "Pause"
-                mainActivityJava.changePlayButtonText("Pause");
+                // Change play Button to say "Pause"
+                mMainActivity.changePlayButtonText("Pause");
             }
-        }else if (msg.arg1==1){
-            //Music is playing
-            if(msg.arg2 ==1){
-                mainActivityJava.changePlayButtonText("Pause");
-            }else {
-                //Play the music
-                Message messenge = Message.obtain();
-                messenge.arg1 = 1;
+        } else if (msg.arg1 == 1) {
+            // Music is playing
+            if (msg.arg2 == 1) {
+                mMainActivity.changePlayButtonText("Pause");
+            } else {
+                // Pause the music
+                Message message = Message.obtain();
+                message.arg1 = 1;
                 try {
-                    msg.replyTo.send(messenge);
+                    msg.replyTo.send(message);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
-                // change play button to say "Play"
-                mainActivityJava.changePlayButtonText("Play");
+                // Change play Button to say "Play"
+                mMainActivity.changePlayButtonText("Play");
             }
         }
     }

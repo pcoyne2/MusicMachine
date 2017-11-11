@@ -18,9 +18,8 @@ import android.util.Log;
 
 public class PlayerService extends Service {
     private static final String TAG = PlayerService.class.getSimpleName();
-
     private MediaPlayer mPlayer;
-    public Messenger messenger = new Messenger(new PlayerHandler(this));
+    public Messenger mMessenger = new Messenger(new PlayerHandler(this));
 
     @Override
     public void onCreate() {
@@ -30,10 +29,10 @@ public class PlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Notification.Builder notBuilder = new Notification.Builder(this);
-        notBuilder.setSmallIcon(R.mipmap.ic_launcher);
-        Notification notification = notBuilder.build();
-        startForeground(1021, notification);
+        Notification.Builder notificationBuilder = new Notification.Builder(this);
+        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        Notification notification = notificationBuilder.build();
+        startForeground(11, notification);
 
         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -49,12 +48,12 @@ public class PlayerService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind");
-        return messenger.getBinder();
+        return mMessenger.getBinder();
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.d(TAG, "onUnBind");
+        Log.d(TAG, "onUnbind");
         return super.onUnbind(intent);
     }
 
@@ -65,15 +64,15 @@ public class PlayerService extends Service {
     }
 
     // Client Methods
-    public void play(){
+    public boolean isPlaying() {
+        return mPlayer.isPlaying();
+    }
+
+    public void play() {
         mPlayer.start();
     }
 
-    public void pause(){
+    public void pause() {
         mPlayer.pause();
-    }
-
-    public boolean isPlaying(){
-        return mPlayer.isPlaying();
     }
 }
